@@ -9,59 +9,49 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class lastTRY extends JFrame {
-	Panel myPanel=new Panel();
-	Label1 myLabel1=new Label1();
-	Push myPush=new Push();
-	Label2 myLabel2=new Label2();
+public class postCARD extends JFrame {
 	
-	lastTRY() {
-		super();
-		this.setSize(500, 455);
-		this.setLocationRelativeTo(null);
-		this.setLayout(null);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setResizable(false);
-		Threads(); }
-	
-	protected void Threads () {
-		myPanel.startThread();
-		myLabel1.startThread();
-		myLabel2.startThread();
-		myPush.startThread();
-		this.setContentPane(myPanel);
-		this.add(myLabel1);
-		this.add(myLabel2);
-		this.add(myPush);
-		this.setVisible(true); }
+	postCARD () {
+		super ();
+		setSize (500, 455);
+		setLocationRelativeTo (null);
+		setLayout (null);
+		setDefaultCloseOperation (EXIT_ON_CLOSE);
+		setResizable (false); }
 	
 	public static void main(String[] args) { 
-		lastTRY lastTRY=new lastTRY(); } } 
+		postCARD postCARD = new postCARD ();
+		Panel myPanel = new Panel();
+		Label1 myLabel1 = new Label1();
+		Push myPush = new Push();
+		Label2 myLabel2 = new Label2();
+		postCARD.setContentPane(myPanel);
+		postCARD.add(myLabel1);
+		postCARD.add(myLabel2);
+		postCARD.add(myPush);
+		postCARD.setVisible(true); } } 
 
 class Panel extends JPanel implements Runnable {
 	MediaTracker track = new MediaTracker(this);
-	Image[] image=new Image[8];
+	Image[] image = new Image[8];
 	int i;
-	
-	protected void startThread() {
-		Thread stream1 = new Thread(this);
-	   	stream1.start(); }
-	
+		
 	Panel() {
 		super();
-		this.setLayout(null);}
+		Thread stream = new Thread(this);
+	   	stream.start();
+		setLayout(null);}
 		
 	public void run() {
-		for ( i=0; i < image.length; i++ )
+		for ( i = 0; i < image.length; i++ )
 			{image[i] = getToolkit().getImage(ResourceLoader.getImage("res/"+i+".png")); 
 			track.addImage(image[i], 0); }
-		i=0;
+		i = 0;
 		try {
 			track.waitForAll();}
 		catch(InterruptedException e) {}
@@ -69,9 +59,9 @@ class Panel extends JPanel implements Runnable {
 
 	protected void go() {
 			while(true) {
-				i=0;
+				i = 0;
 				while( i < image.length ) {
-				this.repaint();
+				repaint();
 				try {
 					Thread.sleep(350);
 					i++; }
@@ -83,23 +73,25 @@ class Panel extends JPanel implements Runnable {
 
 class Label1 extends JLabel implements Runnable  {
 	ImageIcon ico = new ImageIcon(ResourceLoader.getImage("res/button80.png"));
-	action Action= new action();
+	action Action = new action();
 
 	Label1() {
 		super();
-		this.setVisible(false);
-		this.setLocation(220, 320);
-		this.setSize(80, 80);
-		this.setIcon(ico);
-		this.addMouseListener(Action); }
+		Thread stream = new Thread(this);
+	   	stream.start();
+		setVisible(false);
+		setLocation(220, 320);
+		setSize(80, 80);
+		setIcon(ico);
+		addMouseListener(Action); }
 		
 	public void run() {
-		this.waitMe();
+		waitMe();
 		while(true) {
-			this.waitMe();
-			this.setVisible(false);
-			this.waitMe();
-			this.setVisible(true);} }
+			waitMe();
+			setVisible(false);
+			waitMe();
+			setVisible(true);} }
 	
 	protected void startThread() {
 		Thread stream = new Thread(this);
@@ -116,15 +108,17 @@ class Label2 extends JLabel implements Runnable  {
 	
 	Label2() {
 		super();
-		this.setVisible(false);
-		this.setLocation(230, 330);
-		this.setSize(60, 60);
-		this.setIcon(ico);
-		this.addMouseListener(Action);}
+		Thread stream = new Thread(this);
+	   	stream.start();
+		setVisible(false);
+		setLocation(230, 330);
+		setSize(60, 60);
+		setIcon(ico);
+		addMouseListener(Action);}
 		
 	public void run() {
-		this.waitBeforeStart();
-		this.setVisible(true); }
+		waitBeforeStart();
+		setVisible(true); }
 	
 	protected void startThread() {
 		Thread stream3 = new Thread(this);
@@ -140,14 +134,16 @@ class Push extends JLabel implements Runnable  {
 
 	Push() {
 		super();
-		this.setVisible(false);
-		this.setLocation(31, 286);
-		this.setSize(169, 122);
-		this.setIcon(ico); }
+		Thread stream = new Thread(this);
+	   	stream.start();
+		setVisible(false);
+		setLocation(31, 286);
+		setSize(169, 122);
+		setIcon(ico); }
 	
 	public void run() {
-		this.waitBeforeStart();
-		this.setVisible(true); }
+		waitBeforeStart();
+		setVisible(true); }
 	
 	protected void startThread() {
 		Thread stream3 = new Thread(this);
