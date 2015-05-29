@@ -1,13 +1,18 @@
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-
 
 public class Painting extends JFrame {
 	Panel Panel = new Panel();
@@ -15,142 +20,59 @@ public class Painting extends JFrame {
 	
 	Painting() {
 		super();
-		setSize(600, 400);
-		setLocation (300, 200);
+		setBackground(Color.PINK);
+		setSize(700, 500);
+		setLocation (220, 180);
+		setResizable(false);
 		setDefaultCloseOperation (EXIT_ON_CLOSE); }
 	
 	public static void main(String[] args) {
 		Painting MyPaint = new Painting();
 		Panel Panel = new Panel();
-		mousePoint mousePoint = new mousePoint();
 		MyPaint.setContentPane(Panel);
 		MyPaint.setVisible(true); }	} 
-	
 
-class Panel extends JPanel implements Runnable {
+class Panel extends JPanel {
+	JButton Button=new JButton();
+	ButtonAction ButAction=new ButtonAction(this);
 	mousePoint clickIn = new mousePoint(this);
 	volatile boolean Flag = false;
 	volatile boolean Pressed = false;
-	int k=0; int flagLAST; int miniK;
-	int OldX=0; int OldY=0;	int miniFlag=3;
+	int OldX; int OldY;
 	
 	Panel() {
 		super();
-		Thread stream = new Thread(this);
-	   	stream.start();
-		setBackground(Color.RED);
+		Button.setText("Î×ÈÑÒÈÒÜ");
+		setLayout(new BorderLayout());
 		addMouseListener(clickIn); 
-		addMouseMotionListener(clickIn); } 
+		Button.addActionListener(ButAction);
+		addMouseMotionListener(clickIn);
+		add("North", Button); } 
+	
+	public void clear() {
+		Graphics g=this.getGraphics();
+		clearING(g); }
+	
+	public void clearING(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(Color.PINK); 
+		g2.fillRect(0, 0, 700, 500); }
 	
 	public void paintComponent(Graphics g) {
-		if (Flag) {
-			module();
-			System.out.println("k="+k);
-			System.out.println("k="+k);
-			while ( OldX != clickIn.x && OldY != clickIn.y) {
-					flagLAST=0;
-					System.out.println("FLAG="+miniFlag);
-					for (k=miniK; k > 0; k--) {
-						Calculate();
-						flagLAST=1;
-						g.fillRect(OldX-2, OldY-2, 4, 4); 
-						System.out.println("OLDX="+OldX+" OLDY="+OldY); } }
-			OldX=clickIn.x;
-			OldY=clickIn.y;
-			g.fillRect(clickIn.x-2, clickIn.y-2, 4, 4); } }
+			if (Flag) {
+				Graphics2D g2 = (Graphics2D) g;
+				g2.setStroke(new BasicStroke(4.0f)); 
+				g2.drawLine(OldX, OldY, clickIn.x, clickIn.y);
+				OldX=clickIn.x;
+				OldY=clickIn.y;
+				g2.fillOval(clickIn.x-2, clickIn.y-2, 4, 4); } } }
 
-	void Calculate() {
-		if (miniFlag == 1) {
-			if (OldX < clickIn.x ) {
-				if (flagLAST == 0) {
-					if (OldY < clickIn.y )
-						OldY++; 
-					if (OldY > clickIn.y )
-						OldY--; }
-				OldX++; }
-			if (OldX > clickIn.x) {
-				if (flagLAST == 0) {
-					if (OldY < clickIn.y )
-						OldY++; 
-					if (OldY > clickIn.y )
-						OldY--; }
-				OldX--; } }
-		
-		if (miniFlag == 2) {
-			if (OldY < clickIn.y ) {
-				if (flagLAST == 0) {
-					if (OldX < clickIn.x )
-						OldX++; 
-					if (OldX > clickIn.x )
-						OldX--; }
-				OldY++; }
-			if (OldY > clickIn.y) {
-				if (flagLAST == 0) {
-					if (OldX < clickIn.x )
-						OldX++; 
-					if (OldX > clickIn.x )
-						OldX--; }
-				OldY--; } }
-		
-		if (miniFlag == 3) {
-			if (OldY < clickIn.y )
-				OldY++; 
-			if (OldY > clickIn.y )
-				OldY--;
-			if (OldX < clickIn.x ) 
-				OldX++; 
-			if (OldX > clickIn.x )
-				OldX--; }
+	class mousePoint implements MouseListener, MouseMotionListener {
+		Panel Screen;
+		int x=0; int y=0;
 	
-		if (miniFlag == 4) {
-			if (OldX < clickIn.x ) 
-				OldX++; 
-			if (OldX > clickIn.x )
-				OldX--; } 
-
-		if (miniFlag == 4) {
-			if (OldY < clickIn.y ) 
-				OldY++; 
-			if (OldY > clickIn.y )
-				OldY--; } }
-	
-	void module() {
-		int Dy= OldY - clickIn.y;
-		int Dx= OldX - clickIn.x;
-		if (Dx < 0)
-			Dx=-Dx;
-		if (Dy < 0)
-			Dy=-Dy;
-		if (Dy != 0 && Dx != 0) {
-			if (Dx/Dy != 0) {
-					k=Dx/Dy;
-					miniFlag=1; }
-			else 	{k=Dy/Dx; 
-					miniFlag=2; } }	
-		if (Dy == Dx && Dy !=0) {
-			miniFlag=3; 
-			k=Dy; }
-		if (Dy == 0) {
-			k = Dx;
-			miniFlag=4; }
-		if (Dx == 0) {
-			k = Dy;
-			miniFlag=5; }
-		miniK=k;}
-	
-	@Override
-	public void run() {	} }
-
-class mousePoint implements MouseListener, Runnable, MouseMotionListener {
-	Panel Screen;
-	int x=0; int y=0;
-	
-	mousePoint(Panel copy) {
-		this.Screen=copy;	}
-	
-	mousePoint() {
-	Thread stream = new Thread(this);
-   	stream.start(); }
+		mousePoint(Panel copy) {
+			this.Screen=copy;	}
 	
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
@@ -186,9 +108,6 @@ class mousePoint implements MouseListener, Runnable, MouseMotionListener {
 		this.y=y; }
 
 	@Override
-	public void run() {	}
-	
-	@Override
 	public void mouseDragged(MouseEvent arg0) {		
 		if (Screen.Pressed)
 		{clickedPoint(arg0.getX(),arg0.getY());
@@ -196,4 +115,21 @@ class mousePoint implements MouseListener, Runnable, MouseMotionListener {
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) { } }
+	
+class ButtonAction implements ActionListener {
+	Panel Main;
+	
+	ButtonAction(Panel panel) {
+		Main=panel;	}
+	
+	ButtonAction() {
+		super();
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Main.clear();
+		
+	} }
+
 	
